@@ -4,11 +4,44 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.Rule;
 
 public class SyntacticAnalyser {
 
+	enum Rule {
+		PROG_RULE, LOS_RULE, STAT_RULE, WHILE_RULE, FOR_RULE, IF_RULE, ELSE_IF_RULE, ASSIGN_RULE, DECL_RULE, PRINT_RULE,
+		REL_EXPR_RULE, BOOL_EXPR_RULE, CHAR_EXPR_RULE, ARITH_EXPR_RULE, TERM_RULE, FACTOR_RULE, PRINT_EXPR_RULE
+	}
+
+	private Deque<Token> tokens;  // Token stream
+    private Token lookahead;      // Current token being examined
+	private Map<Pair<TreeNode.Label, Token.TokenType>, Rule> parsingTable = new HashMap<>();
+
+    public SyntacticAnalyser(List<Token> tokens) {
+        this.tokens = new ArrayDeque<>(tokens);
+        this.lookahead = this.tokens.poll();  // Initialize the first token
+    }
+
+    // Move to the next token
+    private void consume() {
+        this.lookahead = this.tokens.poll();
+    }
+
+    // Expect a specific token and consume it if it matches
+    private void expect(Token.TokenType expectedType) throws SyntaxException {
+        if (lookahead.getType() != expectedType) {
+            throw new SyntaxException("wrong");
+        }
+        consume();
+    }
+	private void initializeParsingTable() { 
+		// Grammar rules for prog
+		parsingTable.put(new Pair<>(TreeNode.Label.prog, Token.TokenType.PUBLIC), Rule.PROG_RULE);
+	}
+
+
 	public static ParseTree parse(List<Token> tokens) throws SyntaxException {
-		eeeeeeeeee
+
 		return new ParseTree();
 	}
 
