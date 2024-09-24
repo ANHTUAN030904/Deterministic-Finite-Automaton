@@ -41,7 +41,7 @@ public class SyntacticAnalyser {
 
 
 	public static ParseTree parse(List<Token> tokens) throws SyntaxException {
-		eeeeeeeeee sdfasbfdsf
+
 		return new ParseTree();
 	}
 
