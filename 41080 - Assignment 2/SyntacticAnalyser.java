@@ -8,7 +8,7 @@ import java.util.Map;
 public class SyntacticAnalyser {
 
 	public static ParseTree parse(List<Token> tokens) throws SyntaxException {
-		eeeee
+		eeeeeeeeee
 		return new ParseTree();
 	}
 
