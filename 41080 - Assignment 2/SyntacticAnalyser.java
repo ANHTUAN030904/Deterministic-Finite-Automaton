@@ -264,6 +264,7 @@ public class SyntacticAnalyser {
 	}
 
 
+	
 	public static ParseTree parse(List<Token> tokens) throws SyntaxException {
 
 		return new ParseTree();
@@ -271,6 +272,199 @@ public class SyntacticAnalyser {
 
 }
 
+private ParseTree parse(NonTerminal nt) throws SyntaxException {
+    Rule rule = parsingTable.get(new Pair<>(nt, lookahead.getType()));
+    if (rule == null) {
+        throw new SyntaxException("Unexpected token: " + lookahead.getValue());
+        
+    }
+    
+    switch(rule){
+		case PROG_1:
+		    return parseProg_1();
+			     
+		case LOS_1:
+			return parseLos_1();
+		case LOS_2:
+			return parseLos_2();
+				   
+		case STAT_1:
+			return parseStat_1();
+		case STAT_2:
+			return parseStat_2();
+		case STAT_3:
+			return parseStat_3();
+		case STAT_4:
+			return parseStat_4();
+		case STAT_5:
+			return parseStat_5();
+		case STAT_6:
+			return parseStat_6();
+		case STAT_7:
+			return parseStat_7();
+				   
+				////////////////////////////// 
+		case WHILE_1:
+			return parseWhile_1();
+			     
+		case FOR_1:
+			return parseFor_1()
+				   
+		case FOR_START_1:
+			return parseFor_Start_1()
+		case FOR_START_2:
+			return parseFor_Start_2()
+		case FOR_START_3:
+			return parseFor_Start_3()
+				   
+		case FOR_ARITH_1:
+			return parseFor_Arith_1()
+		case FOR_ARITH_2:
+			return parseFor_Arith_2()
+				   
+		case IF_1:
+			return parseIF_1()
+				   
+		case ELSE_IF_1:
+			return parseElse_If_1();
+		case ELSE_If_2:
+			return parseElse_If_2();
+				   
+				//////////////////////////////   
+		case ELSE_IFF_1:
+			return parseElse_Iff_1();
+		case ELSE_IFF_2:
+			return parseElse_Iff_2();
+			     
+		case POSS_IF_1:
+			return parsePoss_If_1();
+				   
+		case ASSIGN_1:
+			return parseAssign_1();
+				   
+		case DECL_1:
+			return parseDecl_1();
+				   
+		case POSS_ASSIGN_1:
+			return parsePoss_Assign_1();
+		case POSS_ASSIGN_2:
+			return parsePoss_Assign_2();
+				   
+		case PRINT_1:
+			return parsePrint_1();
+				   
+		case TYPE_1:
+			return parseType_1();
+		case TYPE_2:
+			return parseType_2();
+				   
+				//////////////////////////////  
+		case TYPE_3:
+			return parseType_3();
+				   
+				   
+		case EXPR_1:
+			return parseExpr_1();
+		case EXPR_2:
+			return parseExpr_2();
+				  
+				   
+		case CHAR_EXPR_1:
+			return parseChar_Expr_1();
+				  
+				   
+		case BOOL_EXPR_1:
+			return parseBool_Expr_1();
+		case BOOL_EXPR_2:
+			return parseBool_Expr_2();
+				  
+				   
+		case BOOL_OP_1:
+			return parseBool_Op_1();
+		case BOOL_OP_2:
+			return parseBool_Op_2();
+				  
+				   
+		case BOOL_EQ_1:
+			return parseBool_Eq_1();
+		case BOOL_EQ_2:
+			return parseBool_Eq_2();
+				  
+				//////////////////////////////   
+		case BOOL_LOG_1:
+			return parseBool_Log_1();
+		case BOOL_LOG_2:
+			return parseBool_Log_2();
+			     
+			     
+		case REL_EXPR_1:
+			return parseRel_Expr_1();
+		case REL_EXPR_2:
+			return parseRel_Expr_2();  
+		case REL_EXPR_3:
+			return parseRel_Expr_3();
+				   
+				   
+		case REL_EXPRR_1:
+			return parseRel_Exprr_1();
+		case REL_EXPRR_2:
+			return parseRel_Exprr_2();
+				   
+				   
+		case REL_OP_1:
+			return parseRel_Op_1();
+		case REL_OP_2:
+			return parseRel_Op_2();
+		case REL_OP_3:
+			return parseRel_Op_3();
+				   
+				//////////////////////////////   
+		case REL_OP_4:
+			return parseRel_Op_4();
+				   
+				   
+		case ARITH_EXPR_1:
+			return parseArith_Expr_1();
+			     
+		case ARITH_EXPRR_1:
+			return parseArith_Exprr_1();
+		case ARITH_EXPRR_2:
+			return parseArith_Exprr_2();
+		case ARITH_EXPRR_3:
+			return parseArith_Exprr_3();
+				   
+				   
+		case TERM_1:
+			return parseTerm_1();
+				  
+				   
+		case TERMM_1:
+			return parseTermm_1();
+		case TERMM_2:
+			return parseTermm_2();
+		case TERMM_3:
+			return parseTermm_3();
+		case TERMM_4:
+			return parseTermm_4();
+				 
+				//////////////////////////////   
+		case FACTOR_1:
+			return parseFactor_1();
+		case FACTOR_2:
+			return parseFactor_2();
+		case FACTOR_3:
+			return parseFactor_3();
+				  
+				  
+		case PRINT_EXPR_1:
+			return parsePrint_Expr_1();
+		case PRINT_EXPR_2:
+			return parsePrint_Expr_2();
+				
+        default:
+            throw new SyntaxException("No rule found for: " + lookahead.getType());
+    }   
+}
 // The following class may be helpful.
 
 class Pair<A, B> {
