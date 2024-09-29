@@ -11,7 +11,7 @@ public class SyntacticAnalyser {
 	enum Rule {
 		PROG_1, LOS_1, LOS_2, STAT_1, STAT_2, STAT_3, STAT_4, STAT_5, STAT_6, STAT_7,
 		WHILE_1, FOR_1, FOR_START_1, FOR_START_2, FOR_START_3, FOR_ARITH_1, FOR_ARITH_2,
-		IF_1, ELSE_IF_1, ELSE_IF_2, ELSE_IFF_1, ELSE_IFF_2, POSS_IF_1, ASSIGN_1, DECL_1, 
+		IF_1, ELSE_IF_1, ELSE_IF_2, ELSE_IFF_1, ELSE_IFF_2, POSS_IF_1, POSS_IF_2, ASSIGN_1, DECL_1, 
 		POSS_ASSIGN_1, POSS_ASSIGN_2, PRINT_1, TYPE_1, TYPE_2, TYPE_3, EXPR_1, EXPR_2, 
 		CHAR_EXPR_1, BOOL_EXPR_1, BOOL_EXPR_2, BOOL_OP_1, BOOL_OP_2, BOOL_EQ_1, BOOL_EQ_2,
 		BOOL_LOG_1, BOOL_LOG_2, REL_EXPR_1, REL_EXPR_2, REL_EXPR_3, REL_EXPRR_1, REL_EXPRR_2,
@@ -100,7 +100,7 @@ public class SyntacticAnalyser {
 
         //Grammar rules for poss if 
         parsingTable.put(new Pair<>(TreeNode.Label.possif, Token.TokenType.IF), Rule.POSS_IF_1);
-        parsingTable.put(new Pair<>(TreeNode.Label.possif, Token.TokenType.LBRACE), Rule.POSS_IF_1);
+        parsingTable.put(new Pair<>(TreeNode.Label.possif, Token.TokenType.LBRACE), Rule.POSS_IF_2);
 
         //Grammar rules for assign
         parsingTable.put(new Pair<>(TreeNode.Label.assign, Token.TokenType.ID), Rule.ASSIGN_1);
@@ -265,8 +265,11 @@ public class SyntacticAnalyser {
 	}
 
 	public static ParseTree parse(List<Token> tokens) throws SyntaxException {
-
-		return new ParseTree();
+		SyntacticAnalyser analyser = new SyntacticAnalyser(tokens);
+    
+		TreeNode rootNode = new TreeNode(TreeNode.Label.prog, null); // Assuming PROGRAM is the root label
+		analyser.parse(rootNode); // Start parsing with the root node
+    	return new ParseTree(rootNode); 
 	}
 
 	private ParseTree parse(TreeNode tn) throws SyntaxException {
@@ -275,7 +278,6 @@ public class SyntacticAnalyser {
 			throw new SyntaxException("Unexpected token: " + lookahead.getValue());
 			
 		}
-		
 		switch(rule){
 			case PROG_1:
 				return parseProg_1();
@@ -323,6 +325,8 @@ public class SyntacticAnalyser {
 				return parseElse_Iff_2();
 			case POSS_IF_1:
 				return parsePoss_If_1();
+			case POSS_IF_2:
+				return parsePoss_If_2();
 			case ASSIGN_1:
 				return parseAssign_1();
 			case DECL_1:
@@ -410,6 +414,8 @@ public class SyntacticAnalyser {
 			default:
 				throw new SyntaxException("No rule found for: " + lookahead.getType());
 		}   
+	}
+
 }
 // The following class may be helpful.
 
