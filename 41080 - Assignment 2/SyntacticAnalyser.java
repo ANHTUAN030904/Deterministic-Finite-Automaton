@@ -316,8 +316,20 @@ public class SyntacticAnalyser {
 		TreeNode lbra2 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LBRACE), tn);
 
 		TreeNode losNode=new TreeNode(TreeNode.Label.los, tn);
-		parseLos_1(losNode);
-		parseLos_2(losNode);
+
+		switch (lookahead.getType()) {
+			case IF:
+			case WHILE:
+			case FOR:
+			case ID:
+			case TYPE:
+			case PRINT:
+			case SEMICOLON:
+				parseLos_1(losNode);
+				break;
+			default:
+				parseLos_2(losNode);
+		}
 		
 		expect(Token.TokenType.RBRACE);
 		TreeNode rbra1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LBRACE), tn);
@@ -346,17 +358,46 @@ public class SyntacticAnalyser {
 
 	public void parseLos_1(TreeNode tn) throws SyntaxException{
 		TreeNode statNode=new TreeNode(TreeNode.Label.stat, tn);
-		parseStat_1(statNode);
-		parseStat_2(statNode);
-		parseStat_3(statNode);
-		parseStat_4(statNode);
-		parseStat_5(statNode);
-		parseStat_6(statNode);
-		parseStat_7(statNode);
+		switch (lookahead.getType()) {
+			case WHILE:
+				parseStat_1(statNode);
+				break;
+			case FOR:
+				parseStat_2(statNode);
+				break;
+			case IF:
+				parseStat_3(statNode);
+				break;
+			case ID:
+				parseStat_4(statNode);
+				break;
+			case TYPE:
+				parseStat_5(statNode);
+				break;
+			case PRINT:
+				parseStat_6(statNode);
+				break;
+			case SEMICOLON:
+				parseStat_7(statNode);
+				break;
+			default:
+				throw new SyntaxException("Unexpected token");
+		}
 
 		TreeNode losNode=new TreeNode(TreeNode.Label.los, tn);
-		parseLos_1(losNode);
-		parseLos_2(losNode);
+		switch (lookahead.getType()) {
+			case IF:
+			case WHILE:
+			case FOR:
+			case ID:
+			case TYPE:
+			case PRINT:
+			case SEMICOLON:
+				parseLos_1(losNode);
+				break;
+			default:
+				parseLos_2(losNode);
+		}
 
 		tn.addChild(statNode);
 		tn.addChild(losNode);
