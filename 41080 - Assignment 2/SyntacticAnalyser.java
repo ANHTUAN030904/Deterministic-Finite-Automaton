@@ -558,46 +558,10 @@ public class SyntacticAnalyser {
 
 	public void parseLos_1(TreeNode tn) throws SyntaxException{
 		TreeNode statNode=new TreeNode(TreeNode.Label.stat, tn);
-		switch (lookahead.getType()) {
-			case WHILE:
-				parseStat_1(statNode);
-				break;
-			case FOR:
-				parseStat_2(statNode);
-				break;
-			case IF:
-				parseStat_3(statNode);
-				break;
-			case ID:
-				parseStat_4(statNode);
-				break;
-			case TYPE:
-				parseStat_5(statNode);
-				break;
-			case PRINT:
-				parseStat_6(statNode);
-				break;
-			case SEMICOLON:
-				parseStat_7(statNode);
-				break;
-			default:
-				throw new SyntaxException("Unexpected token");
-		}
+		parse(statNode);
 
 		TreeNode losNode=new TreeNode(TreeNode.Label.los, tn);
-		switch (lookahead.getType()) {
-			case IF:
-			case WHILE:
-			case FOR:
-			case ID:
-			case TYPE:
-			case PRINT:
-			case SEMICOLON:
-				parseLos_1(losNode);
-				break;
-			default:
-				parseLos_2(losNode);
-		}
+		parse(losNode);
 
 		tn.addChild(statNode);
 		tn.addChild(losNode);
@@ -613,42 +577,42 @@ public class SyntacticAnalyser {
 	
 	public void parseStat_1(TreeNode tn) throws SyntaxException{
 		TreeNode whileNode=new TreeNode(TreeNode.Label.whilestat, tn);
-		parseWhile_1(whileNode);
+		parse(whileNode);
 
 		tn.addChild(whileNode);
 	}
 
 	public void parseStat_2(TreeNode tn) throws SyntaxException{
 		TreeNode forNode=new TreeNode(TreeNode.Label.forstat, tn);
-		parseFor_1(forNode);
+		parse(forNode);
 
 		tn.addChild(forNode);
 	}
 
 	public void parseStat_3(TreeNode tn) throws SyntaxException{
 		TreeNode ifNode=new TreeNode(TreeNode.Label.ifstat, tn);
-		parseIf_1(ifNode);
+		parse(ifNode);
 
 		tn.addChild(ifNode);
 	}
 
 	public void parseStat_4(TreeNode tn) throws SyntaxException{
 		TreeNode assignNode=new TreeNode(TreeNode.Label.assign, tn);
-		parseAssign_1(assignNode);
+		parse(assignNode);
 
 		tn.addChild(assignNode);
 	}
 
 	public void parseStat_5(TreeNode tn) throws SyntaxException{
 		TreeNode declNode=new TreeNode(TreeNode.Label.decl, tn);
-		parseDecl_1(declNode);
+		parse(declNode);
 
 		tn.addChild(declNode);
 	}
 
 	public void parseStat_6(TreeNode tn) throws SyntaxException{
 		TreeNode printNode=new TreeNode(TreeNode.Label.print, tn);
-		parsePrint_1(printNode);
+		parse(printNode);
 
 		tn.addChild(printNode);
 	}
@@ -668,14 +632,13 @@ public class SyntacticAnalyser {
 		TreeNode lpa1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LPAREN), tn);
 
 		TreeNode bool_exprNode=new TreeNode(TreeNode.Label.boolexpr, tn);
-		parseBool_Expr_1(bool_exprNode);
-		parseBool_Expr_2(bool_exprNode);
+		parse(bool_exprNode);
+		
 
 		
 		TreeNode rel_exprNode=new TreeNode(TreeNode.Label.relexpr, tn);
-		parseRel_Expr_1(rel_exprNode);
-		parseRel_Expr_2(rel_exprNode);
-		parseRel_Expr_3(rel_exprNode);
+		parse(rel_exprNode);
+		
 
 		expect(Token.TokenType.RPAREN);
 		TreeNode rpa1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RPAREN), tn);
@@ -684,8 +647,7 @@ public class SyntacticAnalyser {
 		TreeNode lbra1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LBRACE), tn);
 		
 		TreeNode losNode=new TreeNode(TreeNode.Label.los, tn);
-		parseLos_1(losNode);
-		parseLos_2(losNode);
+		parse(losNode);
 
 		expect(Token.TokenType.RBRACE);
 		TreeNode rbra1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RBRACE), tn);
@@ -708,28 +670,22 @@ public class SyntacticAnalyser {
 		TreeNode lpa1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LPAREN), tn);
 
 		TreeNode for_startNode=new TreeNode(TreeNode.Label.forstart, tn);
-		parseFor_Start_1(for_startNode);
-		parseFor_Start_2(for_startNode);
-		parseFor_Start_3(for_startNode);
+		parse(for_startNode);
 
 		expect(Token.TokenType.SEMICOLON);
 		TreeNode semi_1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.SEMICOLON), tn);
 
 		TreeNode rel_exprNode=new TreeNode(TreeNode.Label.relexpr, tn);
-		parseRel_Expr_1(rel_exprNode);
-		parseRel_Expr_2(rel_exprNode);
-		parseRel_Expr_3(rel_exprNode);
+		parse(rel_exprNode);
 
 		TreeNode bool_exprNode=new TreeNode(TreeNode.Label.boolexpr, tn);
-		parseBool_Expr_1(bool_exprNode);
-		parseBool_Expr_2(bool_exprNode);
+		parse(bool_exprNode);
 
 		expect(Token.TokenType.SEMICOLON);
 		TreeNode semi_2 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.SEMICOLON), tn);
 
 		TreeNode for_arithNode=new TreeNode(TreeNode.Label.forarith, tn);
-		parseFor_Arith_1(for_arithNode);
-		parseFor_Arith_2(for_arithNode);
+		parse(for_arithNode);
 
 		expect(Token.TokenType.RPAREN);
 		TreeNode rpa1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RPAREN), tn);
@@ -738,8 +694,7 @@ public class SyntacticAnalyser {
 		TreeNode lbra1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LBRACE), tn);
 
 		TreeNode losNode=new TreeNode(TreeNode.Label.los, tn);
-		parseLos_1(losNode);
-		parseLos_2(losNode);		
+		parse(losNode);	
 
 		expect(Token.TokenType.RBRACE);
 		TreeNode rbra1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RBRACE), tn);
@@ -760,14 +715,14 @@ public class SyntacticAnalyser {
 
 	public void parseFor_Start_1(TreeNode tn) throws SyntaxException{
 		TreeNode declNode=new TreeNode(TreeNode.Label.decl, tn);
-		parseDecl_1(declNode);
+		parse(declNode);
 
 		tn.addChild(declNode);
 	}
 
 	public void parseFor_Start_2(TreeNode tn) throws SyntaxException{
 		TreeNode assignNode=new TreeNode(TreeNode.Label.assign, tn);
-		parseAssign_1(assignNode);
+		parse(assignNode);
 
 		tn.addChild(assignNode);
 	}
@@ -781,7 +736,7 @@ public class SyntacticAnalyser {
 
 	public void parseFor_Arith_1(TreeNode tn) throws SyntaxException{
 		TreeNode arith_exprNode=new TreeNode(TreeNode.Label.arithexpr, tn);
-		parseArith_Expr_1(arith_exprNode);
+		parse(arith_exprNode);
 
 		tn.addChild(arith_exprNode);
 	}
@@ -801,13 +756,10 @@ public class SyntacticAnalyser {
 		TreeNode lpa1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LPAREN), tn);
 
 		TreeNode rel_exprNode=new TreeNode(TreeNode.Label.relexpr, tn);
-		parseRel_Expr_1(rel_exprNode);
-		parseRel_Expr_2(rel_exprNode);
-		parseRel_Expr_3(rel_exprNode);
+		parse(rel_exprNode);
 
 		TreeNode bool_exprNode=new TreeNode(TreeNode.Label.boolexpr, tn);
-		parseBool_Expr_1(bool_exprNode);
-		parseBool_Expr_2(bool_exprNode);
+		parse(bool_exprNode);
 
 		expect(Token.TokenType.RPAREN);
 		TreeNode rpa1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RPAREN), tn);
@@ -816,15 +768,13 @@ public class SyntacticAnalyser {
 		TreeNode lbra1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LBRACE), tn);
 
 		TreeNode losNode=new TreeNode(TreeNode.Label.los, tn);
-		parseLos_1(losNode);
-		parseLos_2(losNode);
+		parse(losNode);
 
 		expect(Token.TokenType.RBRACE);
 		TreeNode rbra1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RBRACE), tn);
 
 		TreeNode else_ifNode=new TreeNode(TreeNode.Label.los, tn);
-		parseElse_If_1(else_ifNode);
-		parseElse_If_2(else_ifNode);
+		parse(else_ifNode);
 
 		tn.addChild(if_1);
 		tn.addChild(lpa1);
@@ -840,21 +790,20 @@ public class SyntacticAnalyser {
 
 	public void parseElse_If_1(TreeNode tn) throws SyntaxException{
 		TreeNode else_iffNode=new TreeNode(TreeNode.Label.elseorelseif, tn);
-		parseElse_Iff_1(else_iffNode);
+		parse(else_iffNode);
 
 		expect(Token.TokenType.LBRACE);
 		TreeNode lbra1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LBRACE), tn);
 
 		TreeNode losNode=new TreeNode(TreeNode.Label.los, tn);
-		parseLos_1(losNode);
-		parseLos_2(losNode);
+		parse(losNode);
 
 
 		expect(Token.TokenType.RBRACE);
 		TreeNode rbra1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RBRACE), tn);
 
 		TreeNode else_ifNode=new TreeNode(TreeNode.Label.elseifstat, tn);
-		parseElse_If_1(else_ifNode);
+		parse(else_ifNode);
 
 		tn.addChild(else_ifNode);
 		tn.addChild(lbra1);
@@ -875,8 +824,7 @@ public class SyntacticAnalyser {
 		TreeNode else_1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.ELSE), tn);
 
 		TreeNode poss_ifNode=new TreeNode(TreeNode.Label.possif, tn);
-		parsePoss_If_1(poss_ifNode);
-		parsePoss_If_2(poss_ifNode);
+		parse(poss_ifNode);
 
 		tn.addChild(else_1);
 		tn.addChild(poss_ifNode);
@@ -890,13 +838,10 @@ public class SyntacticAnalyser {
 		TreeNode lpa1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LPAREN), tn);
 
 		TreeNode rel_exprNode=new TreeNode(TreeNode.Label.relexpr, tn);
-		parseRel_Expr_1(rel_exprNode);
-		parseRel_Expr_2(rel_exprNode);
-		parseRel_Expr_3(rel_exprNode);
+		parse(rel_exprNode);
 
 		TreeNode bool_exprNode=new TreeNode(TreeNode.Label.boolexpr, tn);
-		parseBool_Expr_1(bool_exprNode);
-		parseBool_Expr_2(bool_exprNode);
+		parse(bool_exprNode);
 
 		expect(Token.TokenType.RPAREN);
 		TreeNode rpa1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RPAREN), tn);
@@ -907,6 +852,7 @@ public class SyntacticAnalyser {
 		tn.addChild(bool_exprNode);
 		tn.addChild(rpa1);
 	}
+
 
 
 	// Poss_If_2
@@ -925,20 +871,7 @@ public class SyntacticAnalyser {
 		TreeNode assign = new TreeNode (TreeNode.Label.terminal, new Token(Token.TokenType.ASSIGN),tn);
 
 		TreeNode expr = new TreeNode(TreeNode.Label.expr, tn);
-		switch (lookahead.getType()) {
-			case TRUE:
-			case FALSE:
-			case LPAREN:
-			case ID:
-			case NUM:
-				parseExpr_1(expr);
-				break;
-			case SQUOTE:
-				parseExpr_2(expr);
-				break;
-			default:
-				throw new SyntaxException("Unexpected Token");
-		}
+		parse(expr);
 
 		tn.addChild(id);
 		tn.addChild(assign);
@@ -948,40 +881,14 @@ public class SyntacticAnalyser {
 	// decl_1
 	public void parseDecl_1(TreeNode tn) throws SyntaxException{
 		TreeNode type = new TreeNode(TreeNode.Label.type, tn);
-		if (lookahead.getValue().isPresent()){
-			switch (lookahead.getValue().get()) {
-				case "int":
-					parseType_1(type);
-					break;
-				case "boolean":
-					parseType_2(type);
-					break;
-				case "char":
-					parseType_3(type);
-					break;
-				default:
-					throw new SyntaxException("Unexpected Token");
-			}
-		}
-		else {throw new SyntaxException("Expected token but found none." ); }
+		parse(type);
 	
 		Token value = lookahead;
 		expect(Token.TokenType.ID);
         TreeNode id =new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.ID,value.getValue().orElse("")), tn);
 		
 		TreeNode poss_asign = new TreeNode (TreeNode.Label.possassign,tn);
-		switch (lookahead.getType()) {
-			case TRUE:
-			case FALSE:
-			case LPAREN:
-			case ID:
-			case NUM:
-			case SQUOTE:
-				parsePoss_Assign_1(poss_asign);
-				break;
-			default:
-				parsePoss_Assign_2(poss_asign);
-		}
+		parse(poss_asign);
 
 		tn.addChild(type);
 		tn.addChild(id);
@@ -994,16 +901,7 @@ public class SyntacticAnalyser {
 		TreeNode assign = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.ASSIGN),tn);
 
 		TreeNode expr = new TreeNode(TreeNode.Label.expr, tn);
-		switch (lookahead.getType()) {
-			case :
-				
-				break;
-		
-			default:
-				break;
-		}
-		parseExpr_1(expr);
-		parseExpr_2(expr);
+		parse(expr);
 
 		tn.addChild(assign);
 		tn.addChild(expr);
@@ -1021,8 +919,7 @@ public class SyntacticAnalyser {
 		TreeNode pri = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.PRINT),tn);
 
 		TreeNode print_expr = new TreeNode(TreeNode.Label.printexpr,tn);
-		parsePrint_Expr_1(print_expr);
-		parsePrint_Expr_2(print_expr);
+		parse(print_expr);
 
 		tn.addChild(pri);
 		tn.addChild(print_expr);
@@ -1053,13 +950,10 @@ public class SyntacticAnalyser {
 	// expr_1
 	public void parseExpr_1(TreeNode tn) throws SyntaxException{
 		TreeNode rel_expr = new TreeNode(TreeNode.Label.relexpr, tn);
-		parseRel_Expr_1(rel_expr);
-		parseRel_Expr_2(rel_expr);
-		parseRel_Expr_3(rel_expr);
+		parse(rel_expr);
 
 		TreeNode bool_expr = new TreeNode(TreeNode.Label.boolexpr, tn);
-		parseBool_Expr_1(bool_expr);
-		parseBool_Expr_2(bool_expr);
+		parse(bool_expr);
 
 		tn.addChild(rel_expr);
 		tn.addChild(bool_expr);
@@ -1069,7 +963,7 @@ public class SyntacticAnalyser {
 	// expr_2
 	public void parseExpr_2(TreeNode tn) throws SyntaxException{
 		TreeNode char_expr = new TreeNode(TreeNode.Label.charexpr, tn);
-		parseChar_Expr_1(char_expr);
+		parse(char_expr);
 
 		tn.addChild(char_expr);
 	}
@@ -1094,17 +988,13 @@ public class SyntacticAnalyser {
 	// bool_expr_1
 	public void parseBool_Expr_1(TreeNode tn) throws SyntaxException{
 		TreeNode bool_op = new TreeNode(TreeNode.Label.boolop, tn);
-		parseBool_Op_1(bool_op);
-		parseBool_Op_2(bool_op);
+		parse(bool_op);
 
 		TreeNode rel_expr = new TreeNode(TreeNode.Label.relexpr, tn);
-		parseRel_Expr_1(rel_expr);
-		parseRel_Expr_2(rel_expr);
-		parseRel_Expr_3(rel_expr);
+		parse(rel_expr);
 
 		TreeNode bool_expr = new TreeNode(TreeNode.Label.boolexpr, tn);
-		parseBool_Expr_1(bool_expr);
-		parseBool_Expr_2(bool_expr);
+		parse(bool_expr);
 
 		tn.addChild(bool_op);
 		tn.addChild(rel_expr);
@@ -1120,8 +1010,7 @@ public class SyntacticAnalyser {
 	// bool_op_1
 	public void parseBool_Op_1(TreeNode tn) throws SyntaxException{
 		TreeNode bool_eq = new TreeNode (TreeNode.Label.booleq,tn);
-		parseBool_Eq_1(bool_eq);
-		parseBool_Eq_2(bool_eq);
+		parse(bool_eq);
 
 		tn.addChild(bool_eq);
 	}
@@ -1129,8 +1018,7 @@ public class SyntacticAnalyser {
 	// bool_op_2
 	public void parseBool_Op_2(TreeNode tn) throws SyntaxException{
 		TreeNode bool_log = new TreeNode(TreeNode.Label.boollog, tn);
-		parseBool_Log_1(bool_log);
-		parseBool_Log_2(bool_log);
+		parse(bool_log);
 	}
 
 	// bool_eq_1
@@ -1162,11 +1050,10 @@ public class SyntacticAnalyser {
 	// rel_expr_1
 	public void parseRel_Expr_1(TreeNode tn) throws SyntaxException{
 		TreeNode arith_expr = new TreeNode(TreeNode.Label.arithexpr, tn);
-		parseArith_Expr_1(arith_expr);
+		parse(arith_expr);
 
 		TreeNode rel_exprr = new TreeNode(TreeNode.Label.relexprprime, tn);
-		parseRel_Exprr_1(rel_exprr);
-		parseRel_Exprr_2(rel_exprr);
+		parse(rel_exprr);
 
 		tn.addChild(arith_expr);
 		tn.addChild(rel_exprr);
@@ -1186,13 +1073,10 @@ public class SyntacticAnalyser {
 	
 	public void parseRel_Exprr_1(TreeNode tn) throws SyntaxException{
 		TreeNode relOpNode = new TreeNode(TreeNode.Label.relop, tn);
-		parseRel_Op_1(relOpNode);
-		parseRel_Op_2(relOpNode);
-		parseRel_Op_3(relOpNode);
-		parseRel_Op_4(relOpNode);
+		parse(relOpNode);
 
 		TreeNode arithExprNode = new TreeNode(TreeNode.Label.arithexpr, tn);
-		parseArith_Expr_1(arithExprNode);
+		parse(arithExprNode);
 
 		tn.addChild(relOpNode);
 		tn.addChild(arithExprNode);
@@ -1233,12 +1117,10 @@ public class SyntacticAnalyser {
 
 	public void parseArith_Expr_1(TreeNode tn) throws SyntaxException{
 		TreeNode termNode = new TreeNode(TreeNode.Label.term, tn);
-		parseTerm_1(termNode);
+		parse(termNode);
 
 		TreeNode arithExprrNode = new TreeNode(TreeNode.Label.arithexprprime, tn);
-		parseArith_Exprr_1(arithExprrNode);
-		parseArith_Exprr_2(arithExprrNode);
-		parseArith_Exprr_3(arithExprrNode);
+		parse(arithExprrNode);
 		
 		tn.addChild(termNode);
 		tn.addChild(arithExprrNode);
@@ -1249,12 +1131,10 @@ public class SyntacticAnalyser {
 		TreeNode plu = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.PLUS), tn);
 
 		TreeNode termNode = new TreeNode(TreeNode.Label.term, tn);
-		parseTerm_1(termNode);
+		parse(termNode);
 
 		TreeNode arithExprrNode = new TreeNode(TreeNode.Label.arithexprprime, tn);
-		parseArith_Exprr_1(arithExprrNode);
-		parseArith_Exprr_2(arithExprrNode);
-		parseArith_Exprr_3(arithExprrNode);
+		parse(arithExprrNode);
 		
 		tn.addChild(termNode);
 		tn.addChild(arithExprrNode);
@@ -1266,12 +1146,10 @@ public class SyntacticAnalyser {
 		TreeNode min = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.MINUS), tn);
 
 		TreeNode termNode = new TreeNode(TreeNode.Label.term, tn);
-		parseTerm_1(termNode);
+		parse(termNode);
 
 		TreeNode arithExprrNode = new TreeNode(TreeNode.Label.arithexprprime, tn);
-		parseArith_Exprr_1(arithExprrNode);
-		parseArith_Exprr_2(arithExprrNode);
-		parseArith_Exprr_3(arithExprrNode);
+		parse(arithExprrNode);
 		
 		tn.addChild(termNode);
 		tn.addChild(arithExprrNode);
@@ -1285,15 +1163,10 @@ public class SyntacticAnalyser {
 
 	public void parseTerm_1(TreeNode tn) throws SyntaxException{
 		TreeNode factNode = new TreeNode(TreeNode.Label.factor, tn);
-		parseFactor_1(factNode);
-		parseFactor_2(factNode);
-		parseFactor_3(factNode);
+		parse(factNode);
 		
 		TreeNode termmNode = new TreeNode(TreeNode.Label.termprime, tn);
-		parseTermm_1(termmNode);
-		parseTermm_2(termmNode);
-		parseTermm_3(termmNode);
-		parseTermm_4(termmNode);
+		parse(termmNode);
 
 		tn.addChild(factNode);
 		tn.addChild(termmNode);
@@ -1304,15 +1177,10 @@ public class SyntacticAnalyser {
 		TreeNode tim = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.TIMES), tn);
 
 		TreeNode factNode = new TreeNode(TreeNode.Label.factor, tn);
-		parseFactor_1(factNode);
-		parseFactor_2(factNode);
-		parseFactor_3(factNode);
+		parse(factNode);
 		
 		TreeNode termmNode = new TreeNode(TreeNode.Label.termprime, tn);
-		parseTermm_1(termmNode);
-		parseTermm_2(termmNode);
-		parseTermm_3(termmNode);
-		parseTermm_4(termmNode);
+		parse(termmNode);
 
 		tn.addChild(tim);
 		tn.addChild(factNode);
@@ -1324,15 +1192,10 @@ public class SyntacticAnalyser {
 		TreeNode div = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.DIVIDE), tn);
 
 		TreeNode factNode = new TreeNode(TreeNode.Label.factor, tn);
-		parseFactor_1(factNode);
-		parseFactor_2(factNode);
-		parseFactor_3(factNode);
+		parse(factNode);
 		
 		TreeNode termmNode = new TreeNode(TreeNode.Label.termprime, tn);
-		parseTermm_1(termmNode);
-		parseTermm_2(termmNode);
-		parseTermm_3(termmNode);
-		parseTermm_4(termmNode);
+		parse(termmNode);
 
 		tn.addChild(div);
 		tn.addChild(factNode);
@@ -1344,15 +1207,10 @@ public class SyntacticAnalyser {
 		TreeNode mod = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.MOD), tn);
 
 		TreeNode factNode = new TreeNode(TreeNode.Label.factor, tn);
-		parseFactor_1(factNode);
-		parseFactor_2(factNode);
-		parseFactor_3(factNode);
+		parse(factNode);
 		
 		TreeNode termmNode = new TreeNode(TreeNode.Label.termprime, tn);
-		parseTermm_1(termmNode);
-		parseTermm_2(termmNode);
-		parseTermm_3(termmNode);
-		parseTermm_4(termmNode);
+		parse(termmNode);
 
 		tn.addChild(mod);
 		tn.addChild(factNode);
@@ -1369,7 +1227,7 @@ public class SyntacticAnalyser {
 		TreeNode lpa = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LPAREN),tn);
 
 		TreeNode arithExprNode = new TreeNode(TreeNode.Label.arithexpr, tn);
-		parseArith_Expr_1(arithExprNode);
+		parse(arithExprNode);
 
 		expect(Token.TokenType.RPAREN);
 		TreeNode rpa = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.RPAREN),tn);
@@ -1397,13 +1255,10 @@ public class SyntacticAnalyser {
 
 	public void parsePrint_Expr_1(TreeNode tn) throws SyntaxException{
 		TreeNode relExprNode = new TreeNode(TreeNode.Label.relexpr, tn);
-		parseRel_Expr_1(relExprNode);
-		parseRel_Expr_2(relExprNode);
-		parseRel_Expr_3(relExprNode);
+		parse(relExprNode);
 		
 		TreeNode booExprNode = new TreeNode(TreeNode.Label.boolexpr, tn);
-		parseBool_Expr_1(booExprNode);
-		parseBool_Expr_2(booExprNode);
+		parse(booExprNode);
 
 		tn.addChild(relExprNode);
 		tn.addChild(booExprNode);
@@ -1424,6 +1279,7 @@ public class SyntacticAnalyser {
 		tn.addChild(dqu1);
 	}
 }
+
 // The following class may be helpful.
 
 class Pair<A, B> {
