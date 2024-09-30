@@ -14,7 +14,7 @@ public class SyntacticAnalyser {
 		PROG_1, LOS_1, LOS_2, STAT_1, STAT_2, STAT_3, STAT_4, STAT_5, STAT_6, STAT_7,
 		WHILE_1, FOR_1, FOR_START_1, FOR_START_2, FOR_START_3, FOR_ARITH_1, FOR_ARITH_2,
 		IF_1, ELSE_IF_1, ELSE_IF_2, ELSE_IFF_1, POSS_IF_1, POSS_IF_2, ASSIGN_1, DECL_1, 
-		POSS_ASSIGN_1, POSS_ASSIGN_2, PRINT_1, TYPE_1, TYPE_2, TYPE_3, EXPR_1, EXPR_2, 
+		POSS_ASSIGN_1, POSS_ASSIGN_2, PRINT_1, TYPE, EXPR_1, EXPR_2, 
 		CHAR_EXPR_1, BOOL_EXPR_1, BOOL_EXPR_2, BOOL_OP_1, BOOL_OP_2, BOOL_EQ_1, BOOL_EQ_2,
 		BOOL_LOG_1, BOOL_LOG_2, REL_EXPR_1, REL_EXPR_2, REL_EXPR_3, REL_EXPRR_1, REL_EXPRR_2,
 		REL_OP_1, REL_OP_2, REL_OP_3, REL_OP_4, ARITH_EXPR_1, ARITH_EXPRR_1, ARITH_EXPRR_2,
@@ -125,7 +125,7 @@ public class SyntacticAnalyser {
         parsingTable.put(new Pair<>(TreeNode.Label.print, Token.TokenType.PRINT), Rule.PRINT_1);
 
         //Grammar rules for type 
-        parsingTable.put(new Pair<>(TreeNode.Label.type, Token.TokenType.TYPE), Rule.TYPE_1);
+        parsingTable.put(new Pair<>(TreeNode.Label.type, Token.TokenType.TYPE), Rule.TYPE);
 
         //Grammar rules for expression
         parsingTable.put(new Pair<>(TreeNode.Label.expr, Token.TokenType.LPAREN), Rule.EXPR_1);
@@ -270,8 +270,220 @@ public class SyntacticAnalyser {
 		SyntacticAnalyser analyser = new SyntacticAnalyser(tokens);
     
 		TreeNode rootNode = new TreeNode(TreeNode.Label.prog, null); // Assuming PROGRAM is the root label
-		analyser.parseProg_1(rootNode); // Start parsing with the root node
+		analyser.parse(rootNode); // Start parsing with the root node
     	return new ParseTree(rootNode); 
+	}
+
+	private void parse(TreeNode tn) throws SyntaxException {
+		Rule rule = parsingTable.get(new Pair<>(tn, lookahead.getType()));
+		if (rule == null) {
+			throw new SyntaxException("Unexpected token: " + lookahead.getValue());
+			
+		}
+		switch(rule){
+			case PROG_1:
+				parseProg_1(tn);
+				break;
+			case LOS_1:
+				parseLos_1(tn);
+				break;
+			case LOS_2:
+				parseLos_2(tn);
+				break;
+			case STAT_1:
+				parseStat_1(tn);
+				break;
+			case STAT_2:
+				parseStat_2(tn);
+				break;
+			case STAT_3:
+				parseStat_3(tn);
+				break;
+			case STAT_4:
+				parseStat_4(tn);
+				break;
+			case STAT_5:
+				parseStat_5(tn);
+				break;
+			case STAT_6:
+				parseStat_6(tn);
+				break;
+			case STAT_7:
+				parseStat_7(tn);
+				break;
+			case WHILE_1:
+				parseWhile_1(tn);
+				break;
+			case FOR_1:
+				parseFor_1(tn);
+				break;
+			case FOR_START_1:
+				parseFor_Start_1(tn);
+				break;
+			case FOR_START_2:
+				parseFor_Start_2(tn);
+				break;
+			case FOR_START_3:
+				parseFor_Start_3(tn);
+				break;
+			case FOR_ARITH_1:
+				parseFor_Arith_1(tn);
+				break;
+			case FOR_ARITH_2:
+				parseFor_Arith_2(tn);
+				break;
+			case IF_1:
+				parseIf_1(tn);
+				break;
+			case ELSE_IF_1:
+				parseElse_If_1(tn);
+				break;
+			case ELSE_IF_2:
+				parseElse_If_2(tn);
+				break;   
+			case ELSE_IFF_1:
+				parseElse_Iff_1(tn);
+				break;
+			case POSS_IF_1:
+				parsePoss_If_1(tn);
+				break;
+			case POSS_IF_2:
+				parsePoss_If_2(tn);
+				break;
+			case ASSIGN_1:
+				parseAssign_1(tn);
+				break;
+			case DECL_1:
+				parseDecl_1(tn);
+				break;
+			case POSS_ASSIGN_1:
+				parsePoss_Assign_1(tn);
+				break;
+			case POSS_ASSIGN_2:
+				parsePoss_Assign_2(tn);
+				break;
+			case PRINT_1:
+				parsePrint_1(tn);
+				break;
+			case TYPE:
+				switch (lookahead.getValue().get()) {
+					case "int":
+						parseType_1(tn);
+						break;
+					case "boolean":
+						parseType_2(tn);
+						break;
+					case "char":
+						parseType_3(tn);
+						break;
+					default:
+						throw new SyntaxException("Wrong");
+				}
+			case EXPR_1:
+				parseExpr_1(tn);
+				break; 
+			case EXPR_2:
+				parseExpr_2(tn);
+				break;
+			case CHAR_EXPR_1:
+				parseChar_Expr_1(tn);
+				break;
+			case BOOL_EXPR_1:
+				parseBool_Expr_1(tn);
+				break;
+			case BOOL_EXPR_2:
+				parseBool_Expr_2(tn);
+				break;
+			case BOOL_OP_1:
+				parseBool_Op_1(tn);
+				break;
+			case BOOL_OP_2:
+				parseBool_Op_2(tn);
+				break;
+			case BOOL_EQ_1:
+				parseBool_Eq_1(tn);
+				break;
+			case BOOL_EQ_2:
+				parseBool_Eq_2(tn);
+				break;
+			case BOOL_LOG_1:
+				parseBool_Log_1(tn);
+				break;
+			case BOOL_LOG_2:
+				parseBool_Log_2(tn);
+				break;
+			case REL_EXPR_1:
+				parseRel_Expr_1(tn);
+				break;
+			case REL_EXPR_2:
+				parseRel_Expr_2(tn);
+				break;  
+			case REL_EXPR_3:
+				parseRel_Expr_3(tn);
+				break;
+			case REL_EXPRR_1:
+				parseRel_Exprr_1(tn);
+				break;
+			case REL_EXPRR_2:
+				parseRel_Exprr_2(tn);
+				break;
+			case REL_OP_1:
+				parseRel_Op_1(tn);
+				break;
+			case REL_OP_2:
+				parseRel_Op_2(tn);
+				break;
+			case REL_OP_3:
+				parseRel_Op_3(tn);
+				break; 
+			case REL_OP_4:
+				parseRel_Op_4(tn);
+				break;
+			case ARITH_EXPR_1:
+				parseArith_Expr_1(tn);
+				break;
+			case ARITH_EXPRR_1:
+				parseArith_Exprr_1(tn);
+				break;
+			case ARITH_EXPRR_2:
+				parseArith_Exprr_2(tn);
+				break;
+			case ARITH_EXPRR_3:
+				parseArith_Exprr_3(tn);
+				break;
+			case TERM_1:
+				parseTerm_1(tn);
+				break;
+			case TERMM_1:
+				parseTermm_1(tn);
+				break;
+			case TERMM_2:
+				parseTermm_2(tn);
+				break;
+			case TERMM_3:
+				parseTermm_3(tn);
+				break;
+			case TERMM_4:
+				parseTermm_4(tn);
+				break;  
+			case FACTOR_1:
+				parseFactor_1(tn);
+				break;
+			case FACTOR_2:
+				parseFactor_2(tn);
+				break;
+			case FACTOR_3:
+				parseFactor_3(tn);
+				break;
+			case PRINT_EXPR_1:
+				parsePrint_Expr_1(tn);
+				break;
+			case PRINT_EXPR_2:
+				parsePrint_Expr_2(tn);
+				break;
+			default:
+				throw new SyntaxException("No rule found for: " + lookahead.getType());
+		}   
 	}
 
 	public void parseProg_1(TreeNode tn) throws SyntaxException {
@@ -317,19 +529,7 @@ public class SyntacticAnalyser {
 
 		TreeNode losNode=new TreeNode(TreeNode.Label.los, tn);
 
-		switch (lookahead.getType()) {
-			case IF:
-			case WHILE:
-			case FOR:
-			case ID:
-			case TYPE:
-			case PRINT:
-			case SEMICOLON:
-				parseLos_1(losNode);
-				break;
-			default:
-				parseLos_2(losNode);
-		}
+		parse(losNode);
 		
 		expect(Token.TokenType.RBRACE);
 		TreeNode rbra1 = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.LBRACE), tn);
@@ -725,8 +925,20 @@ public class SyntacticAnalyser {
 		TreeNode assign = new TreeNode (TreeNode.Label.terminal, new Token(Token.TokenType.ASSIGN),tn);
 
 		TreeNode expr = new TreeNode(TreeNode.Label.expr, tn);
-		parseExpr_1(expr);
-		parseExpr_2(expr);
+		switch (lookahead.getType()) {
+			case TRUE:
+			case FALSE:
+			case LPAREN:
+			case ID:
+			case NUM:
+				parseExpr_1(expr);
+				break;
+			case SQUOTE:
+				parseExpr_2(expr);
+				break;
+			default:
+				throw new SyntaxException("Unexpected Token");
+		}
 
 		tn.addChild(id);
 		tn.addChild(assign);
@@ -736,17 +948,40 @@ public class SyntacticAnalyser {
 	// decl_1
 	public void parseDecl_1(TreeNode tn) throws SyntaxException{
 		TreeNode type = new TreeNode(TreeNode.Label.type, tn);
-		parseType_1(type);
-		parseType_2(type);
-		parseType_3(type);
-
+		if (lookahead.getValue().isPresent()){
+			switch (lookahead.getValue().get()) {
+				case "int":
+					parseType_1(type);
+					break;
+				case "boolean":
+					parseType_2(type);
+					break;
+				case "char":
+					parseType_3(type);
+					break;
+				default:
+					throw new SyntaxException("Unexpected Token");
+			}
+		}
+		else {throw new SyntaxException("Expected token but found none." ); }
+	
 		Token value = lookahead;
 		expect(Token.TokenType.ID);
         TreeNode id =new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.ID,value.getValue().orElse("")), tn);
 		
 		TreeNode poss_asign = new TreeNode (TreeNode.Label.possassign,tn);
-		parsePoss_Assign_1(poss_asign);
-		parsePoss_Assign_2(poss_asign);
+		switch (lookahead.getType()) {
+			case TRUE:
+			case FALSE:
+			case LPAREN:
+			case ID:
+			case NUM:
+			case SQUOTE:
+				parsePoss_Assign_1(poss_asign);
+				break;
+			default:
+				parsePoss_Assign_2(poss_asign);
+		}
 
 		tn.addChild(type);
 		tn.addChild(id);
@@ -759,6 +994,14 @@ public class SyntacticAnalyser {
 		TreeNode assign = new TreeNode(TreeNode.Label.terminal, new Token(Token.TokenType.ASSIGN),tn);
 
 		TreeNode expr = new TreeNode(TreeNode.Label.expr, tn);
+		switch (lookahead.getType()) {
+			case :
+				
+				break;
+		
+			default:
+				break;
+		}
 		parseExpr_1(expr);
 		parseExpr_2(expr);
 
